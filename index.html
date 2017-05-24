@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>mylayer</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<script src="js/jquery-2.2.3.min.js"></script>
+	<script src="js/layer/layer.js"></script>
+	<script src="js/plugins.js"></script>
+	<script src="js/listeners.js"></script>
+</head>
+<body>
+
+	<button type="button" class="btn btn-default" id="loading">loading效果</button>
+	<button type="button" class="btn btn-default" id="loading-with-text">带文字loading效果</button>
+	<button type="button" class="btn btn-default" id="alert">alert效果</button>
+	<button type="button" class="btn btn-default" id="success">成功提示</button>
+	<button type="button" class="btn btn-default" id="error">错误提示</button>
+	<button type="button" class="btn btn-default" id="warning">错误提示</button>
+	<button type="button" class="btn btn-default" id="clear">清除</button>
+	<button type="button" class="btn btn-default" id="clearAll">清除所有</button>
+
+	<script>
+		$(function() {
+			var $clear              = 	$("button#clear");
+			var $loading 			= 	$("button#loading");
+			var $loading_with_text  = 	$("button#loading-with-text");
+			var $alert 				= 	$("button#alert");
+			var $success 			= 	$("button#success");
+			var $error 				= 	$("button#error");
+			var $warning 			= 	$("button#warning");
+			var index;
+
+			$loading.on('click',function(){
+				index = $.msg.loading();
+			});
+
+			$loading_with_text.on('click',function(){
+				index = $.msg.loading('带文字loading效果',function(){
+					console.log('loading完后做一个回调处理');
+				});
+			});
+
+			$alert.on('click',function(){
+				index = $.msg.alert('123',function(){
+					console.log('点击确认后做一个回调处理');
+					$.msg.close(index);
+				});
+			});
+
+			$success.on('click',function(){
+				$.msg.success('成功提示',function(){
+					console.log('成功提示后做一个回调处理');
+				},2000);
+			});
+
+			$error.on('click',function(){
+				$.msg.error('失败提示',function(){
+					console.log('失败提示后做一个回调处理');
+				},5000);
+			});
+
+			$warning.on('click',function(){
+				$.msg.warning('警告提示',function(){
+					console.log('警告提示后做一个回调处理');
+				});
+			});
+
+			$clear.on('click',function(){
+				$.msg.close(index);
+			});
+
+		});
+	</script>
+</body>
+</html>

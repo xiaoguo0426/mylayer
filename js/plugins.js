@@ -13,7 +13,7 @@ var out = {}; // 输出的对象
 /**
  * 消息提示
  */
-function _msg() {
+function Msg() {
 	this.version = "1.0.0";
 	this.shade = false;
 	this.index = 0;
@@ -22,42 +22,42 @@ function _msg() {
 /**
  * 关闭指定弹窗
  */
-_msg.prototype.close = function (index) {
+Msg.prototype.close = function (index) {
 	return layer.close(index || this.index);
 };
 
 /**
  * 提示弹窗
  */
-_msg.prototype.alert = function (msg, callback) {
+Msg.prototype.alert = function (msg, callback) {
 	return this.index = layer.alert(msg, callback);
 };
 
 /**
  * 错误弹窗
  */
-_msg.prototype.error = function (msg, callback, time) {
+Msg.prototype.error = function (msg, callback, time) {
 	return this.index = layer.msg(msg || '操作错误', {time: time || 2000, icon: 2, shade: this.shade}, callback);
 };
 
 /**
  * 成功弹窗
  */
-_msg.prototype.success = function (msg, callback, time) {
+Msg.prototype.success = function (msg, callback, time) {
 	return this.index = layer.msg(msg || '操作成功', {time: time || 1000, icon: 1, shade: this.shade}, callback);
 };
 
 /**
  * 警告弹窗
  */
-_msg.prototype.warning = function (msg, callback, time) {
+Msg.prototype.warning = function (msg, callback, time) {
 	return this.index = layer.msg(msg || '警告', {time: time || 1000, icon: 0, shade: this.shade}, callback);
 };
 
 /**
  * 询问弹窗
  */
-_msg.prototype.confirm = function (msg, yes, no) {
+Msg.prototype.confirm = function (msg, yes, no) {
 	return this.index = layer.confirm(msg, {
 		btn: ['确定', '取消']
 	}, yes, no);
@@ -66,28 +66,27 @@ _msg.prototype.confirm = function (msg, yes, no) {
 /**
  * 吐司提示
  */
-_msg.prototype.toast = function (msg, during) {
+Msg.prototype.toast = function (msg, during) {
 	return this.index = layer.msg(msg, {time: during || 3000, shade: this.shade});
 };
 
 /**
  * 加载中提示
  */
-_msg.prototype.loading = function (msg, callback) {
+Msg.prototype.loading = function (msg, callback) {
 	return this.loadingIndex = msg ? layer.msg(msg, {icon: 16, shade: this.shade, time: 0, end: callback})
 			: layer.load(2, {time: 0, shade: this.shade, end: callback});
 };
 
-_msg.prototype.closeLoading = function () {
+Msg.prototype.closeLoading = function () {
 	return layer.close(this.loadingIndex);
 };
 
 /**
  * IFRAME层
  */
-_msg.prototype.iframe = function (title, url, width, height) {
+Msg.prototype.iframe = function (title, url, width, height) {
 	var self = this;
-//	$.http.get(url, {}, function(res){
 		return self.layer.open({
 			type: 2,
 			title: title,
@@ -97,20 +96,19 @@ _msg.prototype.iframe = function (title, url, width, height) {
 			area: [width || '893px', height || '600px'],
 			content: url
 		});
-//	});
 };
 
-_msg.prototype.closeIframeByName = function(name) {
+Msg.prototype.closeIframeByName = function(name) {
 	var index = layer.getFrameIndex(name);
 	return layer.close(index);
 };
 
-out.msg = new _msg();
+out.msg = new Msg();
 
 /**
  * HTTP异步请求
  */
-function _http() {
+function Http() {
 	this.version = "1.0.0";
 	var self = this;
 	this.callbackList = {
@@ -134,23 +132,23 @@ function _http() {
 	this.init();
 }
 
-_http.prototype.init = function(){
+Http.prototype.init = function(){
 	this.statusCodes = {'404':'请求的页面不存在'};
 };
 
-_http.prototype.getError = function(statusCode, errorThrown) {
+Http.prototype.getError = function(statusCode, errorThrown) {
 	return typeof this.statusCodes[statusCode] !== 'undefined' ? this.statusCodes[statusCode] : '网络错误，请稍后重试 [ ' + (statusCode ? 'E - ' + statusCode : errorThrown) + ' ]';
 };
 
-_http.prototype.get = function(url, data, callbacks) {
+Http.prototype.get = function(url, data, callbacks) {
 	return this.load(url, data, 'get', callbacks);
 };
 
-_http.prototype.post = function(url, data, callbacks) {
+Http.prototype.post = function(url, data, callbacks) {
 	return this.load(url, data, 'post', callbacks);
 };
 
-_http.prototype.load = function (url, data, type, callbacks) {
+Http.prototype.load = function (url, data, type, callbacks) {
 	var self = this, callbackType = typeof callbacks;
 	// 回调函数处理
 	if (callbackType === 'function') {
@@ -195,7 +193,7 @@ _http.prototype.load = function (url, data, type, callbacks) {
 /**
  * 请求返回JSON自动处理
  */
-_http.prototype.handle = function (res) {
+Http.prototype.handle = function (res) {
 	if (typeof res === 'object') {
 		if (typeof window.onhashchange !== 'function') {
 			if (res.status === 1) {
@@ -230,20 +228,20 @@ _http.prototype.handle = function (res) {
 	$.modal.render(res);
 };
 
-out.http = new _http();
+out.http = new Http();
 
 
 
 /**
  * 模态框
  */
-function _modal() {
+function Modal() {
 	this.version = "1.0.0";
 	this.index = 0;
 	this.queue = [];
 }
 
-_modal.prototype.render = function(html) {
+Modal.prototype.render = function(html) {
 	var self = this, index = ++this.index;
 	this.queue[index] = $(html).appendTo(document.body).on('shown.bs.modal',function(){
 		$(this).find('form[data-validate]').myValidate(function(data){
@@ -261,36 +259,36 @@ _modal.prototype.render = function(html) {
 	return index;
 };
 
-_modal.prototype.load = function(url) {
+Modal.prototype.load = function(url) {
 	$.http.get(url, {}, function(res){
 		$.http.handle(res);
 	});
 };
 
-_modal.prototype.close = function(index) {
+Modal.prototype.close = function(index) {
 	index = index || this.index;
 	this.queue[index].modal('hide');
 	delete this.queue[index];
 };
 
-_modal.prototype.closeAll = function() {
+Modal.prototype.closeAll = function() {
 	for(var i in this.queue) {
 		this.close(i);
 	}
 };
 
-out.modal = new _modal();
+out.modal = new Modal();
 
 
 
 /**
  * 表单相关操作
  */
-function _form() {
+function Form() {
 	this.version = "1.0.0";
 }
 
-_form.prototype.submit = function(form, callback){
+Form.prototype.submit = function(form, callback){
 	var $this = $(form), events = $._data(form, 'events'), callback = callback || {};
 	if (typeof (events['requestComplete']) !== 'undefined') {
 		callback.success = function(data){
@@ -300,7 +298,7 @@ _form.prototype.submit = function(form, callback){
 	$.http.load($this.attr('action'), $this.serializeArray(), $this.attr('method'), callback);
 };
 
-out.form = new _form();
+out.form = new Form();
 
 // 扩展方法到JQ
 $.extend(out);

@@ -15,7 +15,10 @@
 	<button type="button" class="btn btn-default" id="alert">alert效果</button>
 	<button type="button" class="btn btn-default" id="success">成功提示</button>
 	<button type="button" class="btn btn-default" id="error">错误提示</button>
-	<button type="button" class="btn btn-default" id="warning">错误提示</button>
+	<button type="button" class="btn btn-default" id="warning">警告提示</button>
+	<button type="button" class="btn btn-default" id="iframe">加载iframe</button>
+	<button type="button" class="btn btn-default" id="confirm">询问confirm</button>
+	<button type="button" class="btn btn-default" id="toast">吐司toast</button>
 	<button type="button" class="btn btn-default" id="clear">清除</button>
 	<button type="button" class="btn btn-default" id="clearAll">清除所有</button>
 
@@ -28,16 +31,26 @@
 			var $success 			= 	$("button#success");
 			var $error 				= 	$("button#error");
 			var $warning 			= 	$("button#warning");
+			var $iframe 			=   $("button#iframe");
+			var $confirm 			=   $("button#confirm");
+			var $toast 				=   $("button#toast");
 			var index;
 
 			$loading.on('click',function(){
 				index = $.msg.loading();
+
+				setTimeout(function () {
+					$.msg.close(index);
+				},5000);
 			});
 
 			$loading_with_text.on('click',function(){
 				index = $.msg.loading('带文字loading效果',function(){
 					console.log('loading完后做一个回调处理');
 				});
+				setTimeout(function () {
+					$.msg.close(index);
+				},5000);
 			});
 
 			$alert.on('click',function(){
@@ -54,8 +67,8 @@
 			});
 
 			$error.on('click',function(){
-				$.msg.error('失败提示',function(){
-					console.log('失败提示后做一个回调处理');
+				$.msg.error('错误提示',function(){
+					console.log('错误提示后做一个回调处理');
 				},5000);
 			});
 
@@ -63,6 +76,19 @@
 				$.msg.warning('警告提示',function(){
 					console.log('警告提示后做一个回调处理');
 				});
+			});
+			$iframe.on('click',function(){
+				$.msg.iframe('这是一个iframe','http://www.baidu.com');
+			});
+			$confirm.on('click',function(){
+				$.msg.confirm('这是一个iframe',function(){
+					console.log('点击确认后做一个回调处理');
+				},function(){
+					console.log('点击取消后做一个回调处理');
+				});
+			});
+			$toast.on('click',function(){
+				$.msg.toast('哈哈哈哈哈哈');
 			});
 
 			$clear.on('click',function(){

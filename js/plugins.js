@@ -87,7 +87,7 @@ Msg.prototype.closeLoading = function () {
  */
 Msg.prototype.iframe = function (title, url, width, height) {
 	var self = this;
-		return self.layer.open({
+		return layer.open({
 			type: 2,
 			title: title,
 			shadeClose: true,

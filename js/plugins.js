@@ -51,7 +51,7 @@ Msg.prototype.success = function (msg, callback, time) {
  * 警告弹窗
  */
 Msg.prototype.warning = function (msg, callback, time) {
-	return this.index = layer.msg(msg || '警告', {time: time || 1000, icon: 0, shade: this.shade}, callback);
+	return this.index = layer.msg(msg || '警告', {time: time || 2000, icon: 0, shade: this.shade}, callback);
 };
 
 /**
@@ -159,18 +159,19 @@ Http.prototype.load = function (url, data, type, callbacks) {
 		callbacks = self.callbackList;
 	}
 	type = type || 'GET';
-	if (['GET', 'HEAD', 'OPTIONS'].indexOf(type.toUpperCase()) < 0) { // 部分请求拼接TOKEN
-		self.csrf = getCsrf();
-		var dType = typeof(data);
-		if (dType === 'string') {
-			if (data !== '') data += '&';
-			data += self.csrf.name + '=' + self.csrf.value;
-		} else if (data.length) {
-			data.push({name:self.csrf.name,value:self.csrf.value});
-		} else if (dType === 'object') {
-			data[self.csrf.name] = self.csrf.value;
-		}
-	}
+	//csrf处理
+	// if (['GET', 'HEAD', 'OPTIONS'].indexOf(type.toUpperCase()) < 0) { // 部分请求拼接TOKEN
+	// 	self.csrf = getCsrf();
+	// 	var dType = typeof(data);
+	// 	if (dType === 'string') {
+	// 		if (data !== '') data += '&';
+	// 		data += self.csrf.name + '=' + self.csrf.value;
+	// 	} else if (data.length) {
+	// 		data.push({name:self.csrf.name,value:self.csrf.value});
+	// 	} else if (dType === 'object') {
+	// 		data[self.csrf.name] = self.csrf.value;
+	// 	}
+	// }
 	return $.ajax({
 		url: url,
 		type: type,
@@ -194,38 +195,39 @@ Http.prototype.load = function (url, data, type, callbacks) {
  * 请求返回JSON自动处理
  */
 Http.prototype.handle = function (res) {
-	if (typeof res === 'object') {
-		if (typeof window.onhashchange !== 'function') {
-			if (res.status === 1) {
-				out.msg.success(res.info, 1000, function(){
-					if (res.url) location.href = res.url;
-					else location.reload();
-				});
-			} else {
-				out.msg.error(res.info, 2000, function () {
-					if (res.url) location.href = res.url;
-				});
-			}
-			return;
-		}
+	// if (typeof res === 'object') {
+	// 	if (typeof window.onhashchange !== 'function') {
+	// 		if (res.status === 1) {
+	// 			out.msg.success(res.info, 1000, function(){
+	// 				if (res.url) location.href = res.url;
+	// 				else location.reload();
+	// 			});
+	// 		} else {
+	// 			out.msg.error(res.info, 2000, function () {
+	// 				if (res.url) location.href = res.url;
+	// 			});
+	// 		}
+	// 		return;
+	// 	}
 
-		if (res.status === 1) {
-			out.msg.success(res.info, 1000, function(){
-				res.url ? $.page.redirect(res.url) : $.page.reload();
-			});
-		} else if (res.status === -1) {
-			out.msg.warning(res.info, 1000, function(){
-				if (res.url) location.href = res.url + '?redirectURL=' + location.hash.replace('#', '');
-				else location.reload();
-			});
-		} else {
-			out.msg.error(res.info, 2000, function () {
-				res.url && $.page.redirect(res.url);
-			});
-		}
-		return;
-	}
-	$.modal.render(res);
+	// 	if (res.status === 1) {
+	// 		out.msg.success(res.info, 1000, function(){
+	// 			res.url ? $.page.redirect(res.url) : $.page.reload();
+	// 		});
+	// 	} else if (res.status === -1) {
+	// 		out.msg.warning(res.info, 1000, function(){
+	// 			if (res.url) location.href = res.url + '?redirectURL=' + location.hash.replace('#', '');
+	// 			else location.reload();
+	// 		});
+	// 	} else {
+	// 		out.msg.error(res.info, 2000, function () {
+	// 			res.url && $.page.redirect(res.url);
+	// 		});
+	// 	}
+	// 	return;
+	// }
+	// $.modal.render(res);
+	$.msg.alert('自动处理请在重新操作');
 };
 
 out.http = new Http();

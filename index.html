@@ -20,11 +20,12 @@
 	<button type="button" class="btn btn-default" id="confirm">询问confirm</button>
 	<button type="button" class="btn btn-default" id="toast">吐司toast</button>
 	<button type="button" class="btn btn-default" id="clear">清除</button>
-	<button type="button" class="btn btn-default" id="clearAll">清除所有</button>
+	<!-- <button type="button" class="btn btn-default" id="clearAll">清除所有</button> -->
 
 	<script>
 		$(function() {
 			var $clear              = 	$("button#clear");
+			var $clearAll 			= 	$("button#clearAll");
 			var $loading 			= 	$("button#loading");
 			var $loading_with_text  = 	$("button#loading-with-text");
 			var $alert 				= 	$("button#alert");
@@ -38,7 +39,7 @@
 
 			$loading.on('click',function(){
 				index = $.msg.loading();
-
+				console.log(index);
 				setTimeout(function () {
 					$.msg.close(index);
 				},5000);
@@ -48,6 +49,7 @@
 				index = $.msg.loading('带文字loading效果',function(){
 					console.log('loading完后做一个回调处理');
 				});
+				console.log(index);
 				setTimeout(function () {
 					$.msg.close(index);
 				},5000);
@@ -92,6 +94,7 @@
 			});
 
 			$clear.on('click',function(){
+				console.log(index);
 				$.msg.close(index);
 			});
 

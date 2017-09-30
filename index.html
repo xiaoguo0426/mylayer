@@ -9,19 +9,31 @@
 	<script src="js/listeners.js"></script>
 </head>
 <body>
+<div class="panel panel-default">
+	<div class="panel-heading">消息弹层</div>
+    <div class="panel-body">
+        <button type="button" class="btn btn-default" id="loading">loading效果</button>
+		<button type="button" class="btn btn-default" id="loading-with-text">带文字loading效果</button>
+		<button type="button" class="btn btn-default" id="alert">alert效果</button>
+		<button type="button" class="btn btn-default" id="success">成功提示</button>
+		<button type="button" class="btn btn-default" id="error">错误提示</button>
+		<button type="button" class="btn btn-default" id="warning">警告提示</button>
+		<button type="button" class="btn btn-default" id="iframe">加载iframe</button>
+		<button type="button" class="btn btn-default" id="confirm">询问confirm</button>
+		<button type="button" class="btn btn-default" id="toast">吐司toast</button>
+		<button type="button" class="btn btn-default" id="clear">清除</button>
+    </div>
+</div>
 
-	<button type="button" class="btn btn-default" id="loading">loading效果</button>
-	<button type="button" class="btn btn-default" id="loading-with-text">带文字loading效果</button>
-	<button type="button" class="btn btn-default" id="alert">alert效果</button>
-	<button type="button" class="btn btn-default" id="success">成功提示</button>
-	<button type="button" class="btn btn-default" id="error">错误提示</button>
-	<button type="button" class="btn btn-default" id="warning">警告提示</button>
-	<button type="button" class="btn btn-default" id="iframe">加载iframe</button>
-	<button type="button" class="btn btn-default" id="confirm">询问confirm</button>
-	<button type="button" class="btn btn-default" id="toast">吐司toast</button>
-	<button type="button" class="btn btn-default" id="clear">清除</button>
-	<!-- <button type="button" class="btn btn-default" id="clearAll">清除所有</button> -->
-
+<div class="panel panel-default">
+	<div class="panel-heading">请求</div>
+    <div class="panel-body">
+		<button type="button" class="btn btn-default" id="get">发送一个GET请求</button>
+		<button type="button" class="btn btn-default" id="post">发送一个POST请求</button>
+		<button type="button" class="btn btn-default" id="request">自定义请求处理方法</button>
+    </div>
+</div>
+	
 	<script>
 		$(function() {
 			var $clear              = 	$("button#clear");
@@ -36,6 +48,10 @@
 			var $confirm 			=   $("button#confirm");
 			var $toast 				=   $("button#toast");
 			var index;
+
+			var $get 				= 	$("button#get");
+			var $post 				= 	$("button#post");
+			var $request 			= 	$("button#request");
 
 			$loading.on('click',function(){
 				index = $.msg.loading();
@@ -79,9 +95,11 @@
 					console.log('警告提示后做一个回调处理');
 				});
 			});
+
 			$iframe.on('click',function(){
 				$.msg.iframe('这是一个iframe','http://www.baidu.com');
 			});
+
 			$confirm.on('click',function(){
 				$.msg.confirm('这是一个iframe',function(){
 					console.log('点击确认后做一个回调处理');
@@ -89,6 +107,7 @@
 					console.log('点击取消后做一个回调处理');
 				});
 			});
+
 			$toast.on('click',function(){
 				$.msg.toast('哈哈哈哈哈哈');
 			});
@@ -96,6 +115,43 @@
 			$clear.on('click',function(){
 				console.log(index);
 				$.msg.close(index);
+			});
+
+			$get.on('click',function(){
+				$.http.get('./index.php','',function(res){
+					console.log(res);
+					console.log('这是自定义的成功回调函数，去掉回调函数后将自动处理');
+				});
+			});
+
+			$post.on('click',function(){
+				$.http.post('./index.php','',function(res){
+					console.log(res);
+					console.log('这是自定义的成功回调函数，去掉回调函数后将自动处理');
+				});
+			});
+
+			var callbacks = {
+				before:function(args){
+					console.log('请求前置操作');
+					console.log(args);
+					// return false;
+				},
+				success: function(args){
+					console.log('请求成功操作');
+					console.log(args);
+				},
+				error: function(args){
+					console.log('请求错误操作');
+					console.log(args);
+				},
+				after: function(args){
+					console.log('请求后置操作');
+					console.log(args);
+				}
+			};
+			$request.on('click',function (res) {
+				$.http.get('./index.php',{},callbacks);
 			});
 
 		});

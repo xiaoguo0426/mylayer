@@ -177,7 +177,9 @@ Http.prototype.load = function (url, data, type, callbacks) {
 		type: type,
 		data: data || {},
 		beforeSend: function () {
-			typeof callbacks.before === "function" && callbacks.before.apply(this, arguments);
+			if((typeof callbacks.before === "function") && (callbacks.before.apply(this, arguments) === false)){
+				return false;
+			}
 		},
 		success: function () {
 			typeof callbacks.success === "function" && callbacks.success.apply(this, arguments);
